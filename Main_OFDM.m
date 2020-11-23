@@ -5,6 +5,8 @@ clc;
 fprintf('=============Simulation============\n');
 tic
 %% Load parameters
+load h
+h_syn = syn_h(Feature_CIR);
 config = VLC_ConFigFile();
 Orient = Orientation_Def();
 PoscaseSet = {'1LED_1PD', '4LED_1PD'};
@@ -27,8 +29,8 @@ range_4 = [2,17,113,128;% range of four subcarrier blocks
 range_1 = [2,64,66,128];
 
 
-responsivity = 0.6;
-slope_LED_PI = 10;
+responsivity = 1;
+slope_LED_PI = 1;
 num_frame = 1024;
 h_normalized = [1, 0, 0, zeros(1, (N_FFT+N_CP)*num_frame-3)];
 h_normalized_reflect = [1, 0.5, 0.2, zeros(1, (N_FFT+N_CP)*num_frame-3)];
@@ -36,7 +38,7 @@ Pos_LED = [0 0 3];
 Oren_LED = [0 0 1];
 Oren_PD = [0 0 1];
 
-X_max = 4;
+X_max = 2.5;
 max_iteration = 30;
 P_D_est = zeros(1, 2*X_max/0.1);
 P_D_actal = zeros(1, 2*X_max/0.1);
@@ -54,10 +56,11 @@ for x = -X_max:0.1:X_max
     deta = zeros(1, max_iteration);
     D_est_reflect= zeros(1, max_iteration);
     deta_reflect = zeros(1, max_iteration);
-    Pos_PD = [x x 0];
+    Pos_PD = [x x 1];
     [H_LOS_output, D_RxTx_output] = Channel_LOS(Pos_PD, Pos_LED, Oren_PD, Oren_LED, config);
     h_actual = H_LOS_output * h_normalized;
-    h_actual_reflect = H_LOS_output * h_normalized_reflect;
+%     h_actual_reflect = H_LOS_output * h_normalized_reflect;
+    h_actual_reflect = [h_syn(i,:), zeros(1, (N_FFT+N_CP)*num_frame-length(h_syn(i,:)))];
     parfor i_iteration = 1:max_iteration
         %% bit stream
         [sig_ofdm_time, sig_ofdm_freq] = ofdmMod(num_frame, N_CP, M_QAM, Num_LED, N_FFT, range_1, h_actual);

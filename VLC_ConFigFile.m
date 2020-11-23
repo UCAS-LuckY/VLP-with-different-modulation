@@ -1,6 +1,6 @@
 function [output] = VLC_ConFigFile( )
 %% Noise
-config.detector_area = 1e-4; % unit: m^2
+config.detector_area = pi*(0.015)^2; % unit: m^2
 config.responsivity = 0.6; % responsivity of receiver
 config.electronic_charge = 1.6021892*1e-19; % unit: C
 config.current_2 = 0.562;
@@ -19,13 +19,13 @@ config.Z_room = 3;
 
 %% Transmitter
 config.Semi_Illu = 60;%half power of LED
-config.P_singleLED = 10;
+config.P_singleLED = 1;
 config.N_perarray_LED = 1;
-config.N_LEDarray = 2;%Num of LED array¡¡N*N
+config.N_LEDarray = 1;%Num of LED array¡¡N*N
 config.Num_LED = config.N_LEDarray^2;
 %% Receciver
 config.FOV_PD = 90;%FOV of PD
-config.Adet = 1.0 * 10^-4;%Rececive area of PD cm2
+config.Adet = pi*(0.015)^2;%Rececive area of PD cm2
 config.G_Opf = 1;%Optical filter gian
 config.Re_index = 1.5; % PD internal refractive index
 config.O2E = 0.53;%optical to electricitiy rate
